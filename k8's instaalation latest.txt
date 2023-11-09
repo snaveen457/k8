@@ -1,0 +1,346 @@
+
+kubernetes installation
+
+
+1)
+
+sudo apt update
+$ sudo apt install -y \
+ca-certificates \
+curl \
+gnupg \
+lsb-release
+
+*************************************************************************************************************************************
+2)
+
+Next add the repository's GPG key to Apt's keyrings directory:
+
+$ sudo mkdir -p /etc/apt/keyrings
+
+
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+************************************************************************************************************************************
+3)
+
+Now you can add the correct repository for your system by running this command:
+
+$ echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+********************************************************************************************************************************
+4)
+
+Update your package list to include the contents of the Docker repository:
+
+sudo apt update
+
+*****************************************************************************************************************************
+5)
+
+Finally install containerd:
+
+$ sudo apt install -y containerd.io
+
+********************************************************************************************************************************
+6)
+
+Check the containerd service has started up:
+
+$ sudo service containerd status
+
+containerd.service - containerd container runtime
+
+
+
+Loaded: loaded (/lib/systemd/system/containerd.service; enabled; vendor preset: enabled)
+
+
+
+Active: active (running) since Tue 2022-09-13 16:50:12 BST; 6s ago
+
+***************************************************************************************************************************************
+7)
+
+A few tweaks to the containerd config file are required to get it working properly with Kubernetes. 
+First replace the file's content with containerd's default configuration:
+
+$ sudo containerd config default > /etc/containerd/config.toml
+
+containerd config default > /etc/containerd/config.toml
+
+This populates all the available config fields and sorts out some issues, such as CRI support being disabled on fresh installs.
+
+***********************************************************************************************************************************
+8)
+
+Next open vi /etc/containerd/config.toml and find the following line:
+
+SystemdCgroup = false
+
+**************************************************************************************************************************************
+9)
+
+Change the value to true:
+
+SystemdCgroup = true
+
+This modification is required to enable full support for systemd cgroup management.
+ Without this option, Kubernetes system containers will periodically restart themselves.
+
+*****************************************************************************************************************************************
+10)
+
+Restart containerd to apply your changes:
+
+$ sudo service containerd restart
+
+*******************************************************************************************************************************************
+Installing Kubeadm, Kubectl, and Kubelet
+The second phase in the process is to install Kubernetes tools. These three utilities provide the following capabilities:
+
+Kubeadm - An administration tool that operates at the cluster level. 
+You'll use this to create your cluster and add additional nodes.
+
+Kubectl - Kubectl is the CLI you use to interact with your Kubernetes cluster once it's running.
+
+Kubelet - This is the Kubernetes process that runs on your cluster's worker nodes. 
+It's responsible for maintaining contact with the control plane and starting new containers when requested.
+
+The three binaries are available in an Apt repository hosted by Google Cloud. 
+
+11)
+
+First register the repository's GPG keyring:
+
+$ sudo                     curl -fsSLo /etc/apt/keyrings/kubernetes.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+**********************************************************************************************************************************
+12)
+
+Next add the repository to your sources...
+
+$ echo "deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+********************************************************************************************************************************************************
+
+13)
+
+...and update your package list:
+
+$ sudo apt update
+
+****************************************************************************************************************************************************
+14)
+
+Now install the packages:
+
+$ sudo apt install -y kubeadm kubectl kubelet
+
+*********************************************************************************************************************************************
+15)
+
+It's best practice to "hold" these packages so Apt doesn't automatically update them when you run apt upgrade.
+ Kubernetes cluster upgrades should be initiated manually to prevent downtime and avoid unwanted breaking changes.
+
+$ sudo apt-mark hold kubeadm kubectl kubelet
+
+***********************************************************************************************************************************
+
+Kubernetes does not work when swap is enabled. You must turn swap off before you create your cluster. 
+Otherwise you'll find the provisioning process hangs while waiting for Kubelet to start.
+
+16)
+Run this command to disable swap:
+
+
+$ sudo swapoff -a
+
+**************************************************************************************************************************************
+17)
+
+Next edit your /etc/fstab file and disable any swap mounts:
+
+UUID=ec6efe91-5d34-4c80-b59c-cafe89cc6cb2 / ext4 errors=remount-ro 0 1
+
+/swapfile none swap sw 0 0
+
+This file shows a mount with the swap type as the last line. 
+It should be removed or commented out so that swap remains disabled after system reboots.
+
+***********************************************************************************************************************
+18)
+
+Loading the br_netfilter Module
+
+The br_netfilter kernel module is required to enable iptables to see bridged traffic.
+ Kubeadm won't let you create your cluster when this module's missing.
+
+You can enable it with the following command:
+
+$ sudo modprobe br_netfilter
+
+*************************************************************************************************************************************
+19)
+
+Make it persist after a reboot by including it in your system's modules list:
+
+$ echo br_netfilter | sudo tee /etc/modules-load.d/kubernetes.conf
+
+******************************************************************************************************************************
+20)
+
+Creating Your Cluster
+
+You're ready to create your Kubernetes cluster. Run kubeadm init on the machine you want to host your control plane:
+
+$ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+
+The --pod-network-cidr flag is included so that a correct CIDR allocation is available to the Pod networking addon that will be installed later on.
+ The default value of 10.244.0.0/16 works in most cases but you might have to change the range if you're using a heavily customized networking environment.
+
+***********************************************************************************************************************************************
+21)
+
+Cluster creation can take several minutes to complete.
+
+ Progress information will be displayed in your terminal. You should see this message upon success:
+
+Your Kubernetes control-plane has initialized successfully!
+
+The output also includes information on how to start using your cluster.
+
+******************************************************************************************************************************************
+22)
+
+Preparing Your Kubeconfig File
+
+Begin by copying the auto-generated Kubeconfig file into your own .kube/config directory.
+ Adjust the file's ownership to yourself so that Kubectl can read its contents correctly.
+
+$ mkdir -p $HOME/.kube
+
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+**************************************************************************************************************************************************
+23)
+
+nstalling a Pod Networking Addon
+
+Kubernetes requires a Pod networking addon to exist in your cluster before worker nodes begin operating normally. 
+You must manually install a compatible addon to complete your installation.
+
+Calico and Flannel are the two most popular choices. This guide uses Flannel because of it's simple installation experience.
+
+**************************************************************************************************************************************
+24)
+
+Use Kubectl to add Flannel to your cluster:
+
+$ kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+
+************************************************************************************************************************************
+Wait a few moments and then run kubectl get nodes in your terminal. 
+You should see your Node shows as Ready and you can begin interacting with your cluster.
+
+$ kubectl get nodes
+
+NAME STATUS ROLES AGE VERSION
+
+ubuntu22 Ready control-plane 7m19s v1.25.0
+
+****************************************************************************************************************************************
+25)
+
+If you run kubectl get pods --all-namespaces, 
+
+you should see that the control plane components, CoreDNS, and Flannel are all up and running:
+
+$ kubectl get pods --all-namespaces
+
+NAMESPACE NAME READY STATUS RESTARTS AGE
+
+
+kube-flannel kube-flannel-ds-xlrk6 1/1 Running 5 (16s ago) 11m
+
+kube-system coredns-565d847f94-bzzkf 1/1 Running 5 (2m9s ago) 14m
+
+kube-system coredns-565d847f94-njrdc 1/1 Running 4 (30s ago) 14m
+
+kube-system etcd-ubuntu22 1/1 Running 6 (113s ago) 13m
+
+kube-system kube-apiserver-ubuntu22 1/1 Running 5 (30s ago) 16m
+
+kube-system kube-controller-manager-ubuntu22 1/1 Running 7 (3m59s ago) 13m
+
+kube-system kube-proxy-r9g9k 1/1 Running 8 (21s ago) 14m
+
+kube-system kube-scheduler-ubuntu22 1/1 Running 7 (30s ago) 15m
+
+****************************************************************************************
+26)
+
+Interacting With Your Cluster
+
+Now you can start using Kubectl to interact with your cluster.
+Before you continue, remove the default taint on your control plane node to allow Pods to schedule onto it.
+ Kubernetes prevents Pods from running on the control plane node to avoid resource contention but this restriction is unnecessary for local use.
+
+$ kubectl taint node ubuntu22 node-role.kubernetes.io/control-plane:NoSchedule-
+
+node/ubuntu22 untainted
+
+****************************************************************************************************************************
+27)
+
+Replace ubuntu22 in the command above with the name assigned to your own node.
+
+Now try starting a simple NGINX Pod:
+
+$ kubectl run nginx --image nginx:latest
+
+pod/nginx created
+
+
+***********************************************************************************************************************
+
+28)
+
+Adding Another Node
+
+To configure additional worker nodes,
+ first repeat all the steps in the sections up to "Creating Your Cluster" on each machine you want to use. 
+ Every Node will need containerd, Kubeadm and Kubelet installed. 
+ You should also check your node has full network connectivity to the machine that's running your control plane.
+
+Next run the following command on your new worker node:
+
+kubeadm join 192.168.122.229:6443 \
+
+--node-name node-b \
+
+--token <token> \
+
+--discovery-token-ca-cert-hash sha256:<token-ca-cert-hash>
+
+
+This node has joined the cluster:
+
+
+
+* Certificate signing request was sent to apiserver and a response was received.
+
+
+
+* The Kubelet was informed of the new secure connection details.
+
+
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+
+***********************************************************************************************************************
+

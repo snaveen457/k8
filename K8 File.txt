@@ -1,0 +1,148 @@
+
+https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation 
+
+
+sudo apt update
+sudo apt upgrade -y
+
+# press 8 for none of the above  
+sudo reboot
+
+#set up for names both master and worker
+sudo hostnamectl set-hostname "k8s-master.nvtienanh.local"
+sudo hostnamectl set-hostname "k8s-worker1.nvtienanh.local"
+sudo hostnamectl set-hostname "k8s-worker2.nvtienanh.local"
+
+# install nano editor to update host files
+sudo apt install -y nano 
+
+sudo nano /etc/hosts
+
+# k8's cluster nodes
+192.168.1.10   k8s-master.nvtienanh.local k8s-master
+192.168.1.11   k8s-worker1.nvtienanh.local k8s-worker1
+192.168.1.12   k8s-worker2.nvtienanh.local k8s-worker2
+
+# turn of swap
+sudo swapoff -a
+
+# for checking of size of swapfile
+$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:           7.7Gi       167Mi       7.1Gi       1.0Mi       437Mi   7.3Gi
+Swap:             0B          0B          0B
+
+
+sudo nano /etc/fstab
+
+#/swap.img       none       swap       sw       0       0
+
+sudo mount -a
+
+free -h
+
+
+
+# Load the following kernel module all the nodes
+sudo tee /etc/modules-load.d/containerd.conf <<EOF
+overlay
+br_netfilter
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+
+# set the following kernal parameters for kubernetes run with Tee Command
+sudo tee /etc/sysctl.d/kubernetes.conf <<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+# Reload all changes
+sudo sysctl --system
+
+# in this tutorial we are using container runtime for k8's cluster so install containerd first install its dependencies 
+sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates 
+
+# now we enable Docker repository
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg 
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" 
+
+sudo apt update
+
+# insall conatired
+sudo apt install -y containerd.io
+
+#configure continers so that it's start using systemd as C group
+containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1 
+sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+
+#restart enable container services
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+
+# execute following commands to add apt repository for kubernetes
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" 
+
+#update need 
+sudo apt update 
+
+# install k8's components in master and workers
+sudo apt install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+
+#install k8s cluster only in master 
+sudo kubeadm init \
+  --pod-network-cidr=10.10.0.0/16 \
+  --control-plane-endpoint=k8s-master.nvtienanh.local
+
+# add this below file in only master
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# check for kubernetes status
+kubectl cluster-info
+kubectl get nodes
+
+
+# Then you can join any number of worker nodes by running the following on each as root:
+kubeadm join k8s-master.nvtienanh.local:6443 --token daii9y.g4dq24u6irkz4pt0 \
+        --discovery-token-ca-cert-hash sha256:58b9cc96ed57a5797fddea653756dbda830efbff55b720a10cffb3948d489148
+
+# to add container network interface to add on plugins calicco flannel and wavenet in this we used for calico.
+first download calico networking manifest for the kubernetes API data store
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml -O
+
+# open downloaded file to update pod classless inter-domain routing find CALICO_IPV4POOL_CIDR to add value 
+---
+# The default IPv4 pool to create on startup if none exists. Pod IPs will be
+# chosen from this range. Changing this value after installation will have
+# no effect. This should fall within `--cluster-cidr`.
+# - name: CALICO_IPV4POOL_CIDR
+#   value: "192.168.0.0/16"
+# Disable file logging so `kubectl logs` works.
+- name: CALICO_DISABLE_FILE_LOGGING
+  value: 'true'
+
+
+---
+# The default IPv4 pool to create on startup if none exists. Pod IPs will be
+# chosen from this range. Changing this value after installation will have
+# no effect. This should fall within `--cluster-cidr`.
+- name: CALICO_IPV4POOL_CIDR
+  value: '10.10.0.0/16'
+# Disable file logging so `kubectl logs` works.
+- name: CALICO_DISABLE_FILE_LOGGING
+  value: 'true'
+
+# run the following command for calico 
+kubectl apply -f calico.yaml
+
+#first check all names space status 
+kubectl get pods -n kube-system
+
+#check for node status
+kubectl get nodes

@@ -23,6 +23,7 @@ sudo nano /etc/hosts
 192.168.1.11   k8s-worker1.nvtienanh.local k8s-worker1
 192.168.1.12   k8s-worker2.nvtienanh.local k8s-worker2
 
+# k8's cluster nodes
 192.168.56.104  k8s-master.nvtienanh.local k8s-master
 192.168.56.105  k8s-worker1.nvtienanh.local k8s-worker1
 192.168.56.106  k8s-worker2.nvtienanh.local k8s-worker2
@@ -87,7 +88,7 @@ sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/c
 
 #restart enable container services
 sudo systemctl restart containerd
-sudo systemctl enable containerd
+
 
 # execute following commands to add apt repository for kubernetes
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -113,6 +114,10 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # check for kubernetes status
 kubectl cluster-info
 kubectl get nodes
+
+kubeadm join k8s-master.nvtienanh.local:6443 --token nbo3yv.afbmsp9nsjazwxcj \
+	--discovery-token-ca-cert-hash sha256:a5b6f553bf3266b1188adc1592ccbd7c234a9b5542ddd8867bd1b07473ef5ace 
+
 
 
 # Then you can join any number of worker nodes by running the following on each as root:

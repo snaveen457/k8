@@ -9,9 +9,9 @@ sudo apt upgrade -y
 sudo reboot
 
 #set up for names both master and worker
-sudo hostnamectl set-hostname "k8s-master.nvtienanh.local"
-sudo hostnamectl set-hostname "k8s-worker1.nvtienanh.local"
-sudo hostnamectl set-hostname "k8s-worker2.nvtienanh.local"
+sudo hostnamectl set-hostname "k8s-master.naveen.local"
+sudo hostnamectl set-hostname "k8s-worker1.naveen.local"
+sudo hostnamectl set-hostname "k8s-worker2.naveen.local"
 
 # install nano editor to update host files
 sudo apt install -y nano 
@@ -19,14 +19,14 @@ sudo apt install -y nano
 sudo nano /etc/hosts
 
 # k8's cluster nodes
-192.168.1.10   k8s-master.nvtienanh.local k8s-master
-192.168.1.11   k8s-worker1.nvtienanh.local k8s-worker1
-192.168.1.12   k8s-worker2.nvtienanh.local k8s-worker2
+192.168.1.10   k8s-master.naveen.local k8s-master
+192.168.1.11   k8s-worker1.naveen.local k8s-worker1
+192.168.1.12   k8s-worker2.naveen.local k8s-worker2
 
 # k8's cluster nodes
-192.168.56.104  k8s-master.nvtienanh.local k8s-master
-192.168.56.105  k8s-worker1.nvtienanh.local k8s-worker1
-192.168.56.106  k8s-worker2.nvtienanh.local k8s-worker2
+192.168.56.104  k8s-master.naveen.local k8s-master
+192.168.56.105  k8s-worker1.naveen.local k8s-worker1
+192.168.56.106  k8s-worker2.naveen.local k8s-worker2
 
 
 

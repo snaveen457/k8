@@ -1,3 +1,12 @@
+reome k8,s 
+
+kubeadm reset
+sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*   
+sudo apt-get autoremove  
+sudo rm -rf ~/.kube
+
+
+
 
 https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation 
 
@@ -92,6 +101,7 @@ sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/c
 
 #restart enable container services
 sudo systemctl restart containerd
+sudo systemctl status containerd
 sudo systemctl enable containerd
 
 

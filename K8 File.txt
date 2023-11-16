@@ -1,6 +1,9 @@
 
 https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation 
 
+kubeadm join k8s-master.naveen.local:6443 --token kap6ro.2s5zot9xtyow6sy3 \
+	--discovery-token-ca-cert-hash sha256:e649035fcd068d0100bdd74a6b64d7ae4d4a126b732210747e645cf51b6aa374
+
 
 
 sudo apt update

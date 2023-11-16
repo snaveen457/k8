@@ -2,6 +2,7 @@
 https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation 
 
 
+
 sudo apt update
 sudo apt upgrade -y
 
@@ -88,6 +89,7 @@ sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/c
 
 #restart enable container services
 sudo systemctl restart containerd
+sudo systemctl enable containerd
 
 
 # execute following commands to add apt repository for kubernetes
@@ -104,7 +106,7 @@ sudo apt-mark hold kubelet kubeadm kubectl
 #install k8s cluster only in master 
 sudo kubeadm init \
   --pod-network-cidr=10.10.0.0/16 \
-  --control-plane-endpoint=k8s-master.nvtienanh.local
+  --control-plane-endpoint=k8s-master.naveen.local
 
 # add this below file in only master
 mkdir -p $HOME/.kube
@@ -117,6 +119,11 @@ kubectl get nodes
 
 kubeadm join k8s-master.nvtienanh.local:6443 --token nbo3yv.afbmsp9nsjazwxcj \
 	--discovery-token-ca-cert-hash sha256:a5b6f553bf3266b1188adc1592ccbd7c234a9b5542ddd8867bd1b07473ef5ace 
+
+kubeadm join k8s-master.naveen.local:6443 --token ei472z.lbjdyf31qz47gac7 \
+	--discovery-token-ca-cert-hash sha256:80c8ca7940dae196267371795e727ebd12ce5829ba9c478d54158fca80cd7f52 \
+	--control-plane
+
 
 
 

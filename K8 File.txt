@@ -5,7 +5,8 @@ sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*
 sudo apt-get autoremove  
 sudo rm -rf ~/.kube
 
-
+kubeadm join k8s-master.naveen.local:6443 --token ts31f5.rb7yotcpoz856r9b \
+	--discovery-token-ca-cert-hash sha256:5be47311f6f57f42676b65b9a12fea6aefedabd544e5b90a210de912e71a562c 
 
 
 https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation 

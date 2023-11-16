@@ -6,7 +6,7 @@ sudo apt-get autoremove
 sudo rm -rf ~/.kube
 
 
-
+sudo apt-get install -y kubelet=1.26.0-00 kubeadm=1.26.0-00 kubectl=1.26.0-00
 
 https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation 
 

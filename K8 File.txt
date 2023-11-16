@@ -5,14 +5,12 @@ sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*
 sudo apt-get autoremove  
 sudo rm -rf ~/.kube
 
-kubeadm join k8s-master.naveen.local:6443 --token ts31f5.rb7yotcpoz856r9b \
-	--discovery-token-ca-cert-hash sha256:5be47311f6f57f42676b65b9a12fea6aefedabd544e5b90a210de912e71a562c 
+
 
 
 https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation 
 
-kubeadm join k8s-master.naveen.local:6443 --token kap6ro.2s5zot9xtyow6sy3 \
-	--discovery-token-ca-cert-hash sha256:e649035fcd068d0100bdd74a6b64d7ae4d4a126b732210747e645cf51b6aa374
+
 
 
 
@@ -133,15 +131,7 @@ kubectl get nodes
 
 kubeadm join k8s-master.nvtienanh.local:6443 --token nbo3yv.afbmsp9nsjazwxcj \
 	--discovery-token-ca-cert-hash sha256:a5b6f553bf3266b1188adc1592ccbd7c234a9b5542ddd8867bd1b07473ef5ace 
-***************************************************************************************************************************
-kubeadm join k8s-master.naveen.local:6443 --token ei472z.lbjdyf31qz47gac7 \
-	--discovery-token-ca-cert-hash sha256:80c8ca7940dae196267371795e727ebd12ce5829ba9c478d54158fca80cd7f52 
-**************************************************************************************************************************
 
-
-# Then you can join any number of worker nodes by running the following on each as root:
-kubeadm join k8s-master.nvtienanh.local:6443 --token daii9y.g4dq24u6irkz4pt0 \
-        --discovery-token-ca-cert-hash sha256:58b9cc96ed57a5797fddea653756dbda830efbff55b720a10cffb3948d489148
 
 # to add container network interface to add on plugins calicco flannel and wavenet in this we used for calico.
 first download calico networking manifest for the kubernetes API data store

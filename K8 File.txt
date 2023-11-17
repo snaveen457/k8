@@ -1,8 +1,9 @@
 reome k8,s 
 
+kubeadm join k8s-master.naveen.local:6443 --token af9kt3.4c6g2j6ltcrgnvqi \
+	--discovery-token-ca-cert-hash sha256:45394abec8c4de4571cc13057d9f4521a1eb37b81c7ae636fa41a2a90e0d269e 
 
-sudo kubeadm join k8s-master.naveen.local:6443 --token rnmvjx.yu4iw3twvrj79ytx \
-	--discovery-token-ca-cert-hash sha256:c24235d94abb452053f98012bf9c996d36bbb51ff34dc4012d9ab4673bf78fed 
+
 
 
 kubeadm reset

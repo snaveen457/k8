@@ -1,5 +1,7 @@
 reome k8, 
 
+sudo kubeadm join 10.0.2.6:6443 --token 416cmo.qgcnzboit2tebazo \
+	--discovery-token-ca-cert-hash sha256:eb65392060df18bd53a927bbc56b6e1f2df0f78c26199cdeb6afc152eccfadc6 
 
 
 

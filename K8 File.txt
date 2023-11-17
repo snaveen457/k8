@@ -1,22 +1,12 @@
-reome k8, 
+https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation
 
-sudo kubeadm join 10.0.2.6:6443 --token 416cmo.qgcnzboit2tebazo \
-	--discovery-token-ca-cert-hash sha256:eb65392060df18bd53a927bbc56b6e1f2df0f78c26199cdeb6afc152eccfadc6 
-
-
-
+deletaing cluster
 kubeadm reset
 sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*   
 sudo apt-get autoremove  
 sudo rm -rf ~/.kube
 
-
-sudo apt-get install -y kubelet=1.26.0-00 kubeadm=1.26.0-00 kubectl=1.26.0-00
-sudo apt-mark hold kubelet=1.26.0-00 kubeadm=1.26.0-00 kubectl=1.26.0-00
-
-https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation 
-
-
+*******************************************************
 sudo apt update
 sudo apt upgrade -y
 
@@ -34,17 +24,9 @@ sudo apt install -y nano
 sudo nano /etc/hosts
 
 # k8's cluster nodes
- 10.0.2.6  k8s-master.naveen.local k8s-master
- 10.0.2.4   k8s-worker1.naveen.local k8s-worker1
- 10.0.2.5   k8s-worker2.naveen.local k8s-worker2
-
-# k8's cluster nodes
-10.0.2.6  k8s-master.naveen.local k8s-master
+10.0.2.6  k8s-master.naveen.local  k8s-master
 10.0.2.4  k8s-worker1.naveen.local k8s-worker1
 10.0.2.5  k8s-worker2.naveen.local k8s-worker2
-
-
-
 
 # turn of swap
 sudo swapoff -a
@@ -55,7 +37,6 @@ $ free -h
 Mem:           7.7Gi       167Mi       7.1Gi       1.0Mi       437Mi   7.3Gi
 Swap:             0B          0B          0B
 
-
 sudo nano /etc/fstab
 
 #/swap.img       none       swap       sw       0       0
@@ -63,8 +44,6 @@ sudo nano /etc/fstab
 sudo mount -a
 
 free -h
-
-
 
 # Load the following kernel module all the nodes
 sudo tee /etc/modules-load.d/containerd.conf <<EOF
@@ -106,7 +85,6 @@ sudo systemctl restart containerd
 sudo systemctl status containerd
 sudo systemctl enable containerd
 
-
 # execute following commands to add apt repository for kubernetes
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" 
@@ -117,6 +95,9 @@ sudo apt update
 # install k8's components in master and workers
 sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
+
+sudo apt-get install -y kubelet=1.26.0-00 kubeadm=1.26.0-00 kubectl=1.26.0-00
+sudo apt-mark hold kubelet=1.26.0-00 kubeadm=1.26.0-00 kubectl=1.26.0-00
 
 #install k8s cluster only in master 
 sudo kubeadm init \

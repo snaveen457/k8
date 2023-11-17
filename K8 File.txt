@@ -130,6 +130,8 @@ sudo kubeadm init \
   --pod-network-cidr=10.10.0.0/16 \
   --control-plane-endpoint=k8s-master.naveen.local
 
+sudo kubeadm init --apiserver-advertise-address=10.0.2.6 --pod-network-cidr=10.10.0.0/16
+
 # add this below file in only master
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config

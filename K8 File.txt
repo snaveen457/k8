@@ -1,5 +1,10 @@
 reome k8,s 
 
+
+sudo kubeadm join k8s-master.naveen.local:6443 --token rnmvjx.yu4iw3twvrj79ytx \
+	--discovery-token-ca-cert-hash sha256:c24235d94abb452053f98012bf9c996d36bbb51ff34dc4012d9ab4673bf78fed 
+
+
 kubeadm reset
 sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*   
 sudo apt-get autoremove  

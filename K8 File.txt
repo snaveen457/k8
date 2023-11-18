@@ -24,9 +24,9 @@ sudo apt install -y nano
 sudo nano /etc/hosts
 
 # k8's cluster nodes
-10.0.2.6  k8s-master.naveen.local  k8s-master
-10.0.2.4  k8s-worker1.naveen.local k8s-worker1
-10.0.2.5  k8s-worker2.naveen.local k8s-worker2
+10.0.2.15  k8s-master.naveen.local  k8s-master
+10.0.2.7  k8s-worker1.naveen.local k8s-worker1
+10.0.2.8  k8s-worker2.naveen.local k8s-worker2
 
 # turn of swap
 sudo swapoff -a
@@ -104,7 +104,7 @@ sudo kubeadm init \
   --pod-network-cidr=10.10.0.0/16 \
   --control-plane-endpoint=k8s-master.naveen.local
 
-sudo kubeadm init --apiserver-advertise-address=10.0.2.6 --pod-network-cidr=10.10.0.0/16
+sudo kubeadm init --apiserver-advertise-address=10.0.2.15 --pod-network-cidr=10.10.0.0/16
 
 # add this below file in only master
 mkdir -p $HOME/.kube

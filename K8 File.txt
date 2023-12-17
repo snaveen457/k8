@@ -1,8 +1,8 @@
 https://www.youtube.com/watch?v=iwlNCePWiw4  Refrence YT k8 Installation
 
-kubeadm join 10.0.2.15:6443 --token 9kt4uz.s0e9ro12nhj1lxra \
-	--discovery-token-ca-cert-hash sha256:2e89c8115438f036991e0ff8dfbfb158cbc3efbe967e269a8713bf966d1829df
 
+kubeadm join 192.168.56.107:6443 --token eueoii.jx8v9e3rf7viecub \
+        --discovery-token-ca-cert-hash sha256:0c405cd1a0223aaa766dc9dd46dceba9d1054e65a2ba427c4fb444747731819e
 
 deletaing cluster
 kubeadm reset

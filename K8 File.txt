@@ -110,8 +110,10 @@ sudo kubeadm init \
 
 sudo kubeadm init --apiserver-advertise-address=10.0.2.9 --pod-network-cidr=10.10.0.0/16
 
-kubeadm join 10.0.2.9:6443 --token 1hkfzv.n0f2riafscr6fi8y \
-	--discovery-token-ca-cert-hash sha256:2375905239f278fc77686816801b601d52655a5c72895b7f61a307b02d0ba75e
+kubeadm join 10.0.2.9:6443 --token 74zmgk.76awy8bgq08azggp \
+	--discovery-token-ca-cert-hash sha256:0aba655b08fbc86d4b64265f10cc0a082adf8338a88ce65ea95649686718e257 
+
+
 
 *********************************************
 

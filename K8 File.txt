@@ -113,7 +113,10 @@ sudo kubeadm init --apiserver-advertise-address=10.0.2.9 --pod-network-cidr=10.1
 kubeadm join 10.0.2.9:6443 --token 1hkfzv.n0f2riafscr6fi8y \
 	--discovery-token-ca-cert-hash sha256:2375905239f278fc77686816801b601d52655a5c72895b7f61a307b02d0ba75e
 
+*********************************************
 
+kubeadm join 10.0.2.9:6443 --token uxmfv1.f0s3upuedsjxsnme \
+	--discovery-token-ca-cert-hash sha256:4d9d2bfe135432e7090ad60dc82d2a2ac92c1553ba6a9bd14501213005a94ba9 
 
 # add this below file in only master
 mkdir -p $HOME/.kube

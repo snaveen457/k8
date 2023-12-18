@@ -108,7 +108,12 @@ sudo kubeadm init \
   --pod-network-cidr=10.10.0.0/16 \
   --control-plane-endpoint=k8s-master.naveen.local
 
-sudo kubeadm init --apiserver-advertise-address=10.0.2.15 --pod-network-cidr=10.10.0.0/16
+sudo kubeadm init --apiserver-advertise-address=10.0.2.9 --pod-network-cidr=10.10.0.0/16
+
+kubeadm join 10.0.2.9:6443 --token 1hkfzv.n0f2riafscr6fi8y \
+	--discovery-token-ca-cert-hash sha256:2375905239f278fc77686816801b601d52655a5c72895b7f61a307b02d0ba75e
+
+
 
 # add this below file in only master
 mkdir -p $HOME/.kube

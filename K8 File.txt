@@ -28,9 +28,9 @@ sudo apt install -y nano
 sudo nano /etc/hosts
 
 # k8's cluster nodes
-10.0.2.15  k8s-master.naveen.local  k8s-master
-10.0.2.7  k8s-worker1.naveen.local k8s-worker1
-10.0.2.8  k8s-worker2.naveen.local k8s-worker2
+10.0.2.10  k8s-master.naveen.local  k8s-master
+10.0.2.15 k8s-worker1.naveen.local k8s-worker1
+10.0.2.11  k8s-worker2.naveen.local k8s-worker2
 
 # turn of swap
 sudo swapoff -a
@@ -108,12 +108,15 @@ sudo kubeadm init \
   --pod-network-cidr=10.10.0.0/16 \
   --control-plane-endpoint=k8s-master.naveen.local
 
-sudo kubeadm init --apiserver-advertise-address=10.0.2.9 --pod-network-cidr=10.10.0.0/16
+sudo kubeadm init --apiserver-advertise-address=10.0.2.10 --pod-network-cidr=10.10.0.0/16
 
 kubeadm join 10.0.2.9:6443 --token 74zmgk.76awy8bgq08azggp \
 	--discovery-token-ca-cert-hash sha256:0aba655b08fbc86d4b64265f10cc0a082adf8338a88ce65ea95649686718e257 
 
+******************************************************************************
 
+kubeadm join 10.0.2.10:6443 --token dgl6wt.oequuuhr3muomgcz \
+	--discovery-token-ca-cert-hash sha256:183540452d930a6887574c22bcc2af827557dc0f972f04ec0c6b403d4fef900e 
 
 *********************************************
 

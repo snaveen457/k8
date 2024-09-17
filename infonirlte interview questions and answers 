@@ -1,0 +1,11 @@
+So what is the total number of Kubernetes pods you have actually set up? What kind of, I think, various configurations you have of the Kubernetes as we came to understand? So what is the peak traffic of your cluster?
+
+A) I have set up around **50-60 Kubernetes pods** across various projects. The configurations include:
+
+- **Deployment Configurations**: For microservices with auto-scaling and load balancing.
+- **StatefulSets**: For stateful applications like databases.
+- **DaemonSets**: For logging and monitoring agents.
+- **Horizontal Pod Autoscaling (HPA)**: For scaling based on CPU or memory usage.
+  
+The peak traffic handled by my cluster was around **1000-1500 requests per second**, with the cluster scaling automatically based on the load.
+

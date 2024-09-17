@@ -9,3 +9,33 @@ A) I have set up around **50-60 Kubernetes pods** across various projects. The c
   
 The peak traffic handled by my cluster was around **1000-1500 requests per second**, with the cluster scaling automatically based on the load.
 
+
+So what is the size of your cluster? Production, number of Kubernetes pods you said you have set up, right? And you give access control. But what is the number of pods you have set up which is like at peak traffic it runs? You should have some numbers, right? Some statistics as to at peak traffic we run 100 pods or 200 pods. What are the metrics you measure in your Kubernetes cluster?
+
+At peak traffic, the cluster runs about **80-100 pods**. For monitoring, I measure metrics like **CPU usage, memory consumption, pod availability, request latency**, and **network traffic**. These are tracked using **Prometheus** and **CloudWatch** to ensure the cluster scales and performs efficiently.
+
+
+Do you have any security protocols, firewalls to your Kubernetes cluster?
+
+Yes, I implement several security protocols for Kubernetes clusters:
+
+- **Network Policies**: To control traffic between pods.
+- **Role-Based Access Control (RBAC)**: For managing user permissions.
+- **Pod Security Policies**: To enforce security standards for pods.
+- **Firewalls and Security Groups**: To restrict access to the cluster.
+- **Image Scanning**: To detect vulnerabilities in container images.
+
+ If I, as a developer, want to ping to the cluster, what kind of authentication or security mechanism should I put to sign up to the cluster?
+
+
+To access the cluster as a developer, you should use:
+
+- **Kubeconfig File**: Provides credentials and cluster access details.
+- **Role-Based Access Control (RBAC)**: Ensures you have the right permissions.
+- **Service Accounts**: For application-specific access.
+- **IAM Roles (in cloud environments)**: To manage authentication securely.
+- **Multi-Factor Authentication (MFA)**: For added security when accessing the cluster.
+
+Which specific provider do you use IAM or AWS? AWS, IAD and Access Management, that is the authentication gateway. Do you use any single sign-on offerings of AWS?
+
+I use **AWS IAM** for access management. For single sign-on (SSO), I use **AWS SSO** (now integrated with AWS IAM Identity Center) to enable seamless and secure access to the cluster and other AWS services.

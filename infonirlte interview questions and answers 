@@ -39,3 +39,22 @@ To access the cluster as a developer, you should use:
 Which specific provider do you use IAM or AWS? AWS, IAD and Access Management, that is the authentication gateway. Do you use any single sign-on offerings of AWS?
 
 I use **AWS IAM** for access management. For single sign-on (SSO), I use **AWS SSO** (now integrated with AWS IAM Identity Center) to enable seamless and secure access to the cluster and other AWS services.
+
+Yeah, I think from a scalability point of view, right, when the number of requests comes and developers want to ask for logs for any application and how you will basically be able to troubleshoot. What are the security protocols? Like, if you're at the DevOps booth, do you give the logs directly or is there some security process you follow internally?
+
+From a scalability and security perspective, handling log requests involves:
+
+1. **Centralized Logging**: Use a centralized logging system (e.g., **ELK Stack**, **Splunk**, or **CloudWatch Logs**) to efficiently manage and scale log data.
+
+2. **Access Control**: Implement strict access controls, ensuring only authorized users or roles can access logs. This can include role-based permissions and multi-factor authentication.
+
+3. **Secure Access Channels**: Provide access to logs through secure, encrypted channels. Avoid direct handover of logs.
+
+4. **Request and Approval Process**: Implement a formal process for log access requests, including documentation and approval workflows.
+
+5. **Audit and Monitoring**: Maintain an audit trail of log access and requests, monitoring for any unauthorized or unusual activity.
+
+6. **Data Masking and Redaction**: Ensure sensitive information within logs is masked or redacted to prevent exposure.
+
+Logs are not typically handed over directly; instead, access is managed through secure, controlled methods, adhering to internal security protocols.
+
